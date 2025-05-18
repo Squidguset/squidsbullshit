@@ -1,0 +1,13 @@
+[manifest]
+version = "1.0.0"
+dump_lua = true
+priority = -1
+
+[[patches]]
+[patches.pattern]
+target = '=[SMODS Cryptid "items/enhanced.lua"]'
+pattern = '''enhancement = {
+		order = 2,'''
+position = "after"
+payload = '''m_sgbs_rumpus = { atlas = "sgbs_enhancement", pos = { x = 2, y = 0 } },'''
+match_indent = true

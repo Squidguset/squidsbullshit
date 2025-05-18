@@ -1,0 +1,12 @@
+{
+	"id": "squidbs",
+	"name": "Squid's Bullshit",
+	"display_name": "Squid's BS",
+	"author": ["Squidguset"],
+	"description": "Im bored so I made this",
+	"prefix": "sgbs",
+	"main_file": "main.lua",
+	"priority": 115,
+	"version": "1.0.0",
+	"dependencies": []
+}
