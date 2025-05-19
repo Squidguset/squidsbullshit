@@ -16,7 +16,7 @@ SMODS.Joker {
         return {vars ={"{C:blue}test"}}
     end,
     calculate = function (self, card, context)
-        if context.using_consumeable and context.consumeable.config.center_key == "c_sgbs_blank"then
+        if context.using_consumeable and context.consumeable.config.center_key == "c_sgbs_blank" and not context.blueprint and SMODS.find_card("j_sgbs_dryfire")[1] == card then
             return {message = ""}
         end
     end
@@ -185,4 +185,124 @@ SMODS.Joker {
             return SquidBS.experiments.effect.effect_test:func(card,context)
         end
     end
+}
+
+SMODS.Joker{
+    key = "conv",
+    atlas = "jokers",
+    rarity = 3,
+    loc_vars = function (self, info_queue, card)
+        
+        info_queue[#info_queue+1] = {key = "cred_hasu",set = "Other"}
+    end,
+    demicoloncompat = true,
+    pos = {x=3,y=0},
+    calculate = function (self, card, context)
+        if not context.blueprint then
+            if (context.ending_shop and context.cardarea == G.jokers ) or context.forcetrigger then
+                local jslot = 0
+                for x =1 , #G.jokers.cards do
+                    if G.jokers.cards[x] == card then jslot = x; break end
+                end
+                if G.jokers.cards[jslot-1] and G.jokers.cards[jslot+1] then
+                    G.E_MANAGER:add_event(Event({
+                        func = function ()
+                            G.jokers.cards[jslot-1]:flip()
+                            play_sound('tarot1')
+                            delay(0.1)
+                            G.jokers.cards[jslot+1]:flip()
+                            play_sound('tarot1')
+                            return true
+                        end
+                    }))
+                    G.E_MANAGER:add_event(Event({
+                        delay = 0.5,
+                        trigger = "after",
+                        func = function ()
+                            G.jokers.cards[jslot-1]:juice_up()
+                            G.jokers.cards[jslot+1]:juice_up()
+                            copy_card(G.jokers.cards[jslot-1],G.jokers.cards[jslot+1])
+                            return true
+                        end
+                    }))
+                    G.E_MANAGER:add_event(Event({
+                        delay = 0.5,
+                        trigger = "after",
+                        func = function ()
+                            G.jokers.cards[jslot-1]:flip()
+                            play_sound('tarot2', percent, 0.6)
+                            delay(0.1)
+                            G.jokers.cards[jslot+1]:flip()
+                            play_sound('tarot2', percent, 0.6)
+                            return true
+                        end
+                    }))
+                end
+            end
+        end
+    end
+}
+
+SMODS.Joker {
+    key = "snake",
+    atlas = "jokers",
+    config = {extra = {mod = 0.5}},
+    dependencies = {
+        "Cryptid"
+    },
+    loc_vars = function (self, info_queue, card)
+        return {vars = {card.ability.extra.mod}}
+    end,
+    calculate = function(self, card, context)
+		if
+			(context.end_of_round and not context.repetition and not context.individual and not context.blueprint)
+			or context.forcetrigger
+		then
+			local check = false
+			for i = 1, #G.jokers.cards do
+				if G.jokers.cards[i] == card then
+                    if Cryptid then
+					if i < #G.jokers.cards then
+						    if not Card.no(G.jokers.cards[i + 1], "immutable", true) then
+						    	check = true
+						    	Cryptid.with_deck_effects(G.jokers.cards[i + 1], function(cards)
+						    		Cryptid.misprintize(
+						    			cards,
+						    			{ min = card.ability.extra.mod, max = card.ability.extra.mod },
+						    			nil,
+						    			true
+						    		)
+						    	end)
+						    end
+                        else
+                            if not G.jokers.cards[i + 1].config.center.immutable then
+                                check = true
+                                local ccard = G.jokers.cards[i + 1]
+                                for k,v in  pairs(ccard.ability) do
+                                    if type(v) == "number" then
+                                        ccard.ability[k] = ccard.ability[k] * card.ability.extra.mod
+                                    end
+                                end
+                                for k,v in  pairs(extra) do
+                                    if type(v) == "number" then
+                                        ccard.ability[k] = ccard.ability[k] * card.ability.extra.mod
+                                    end
+                                end
+                            end
+                        end
+					end
+				end
+			end
+			if check then
+				card_eval_status_text(
+					card,
+					"extra",
+					nil,
+					nil,
+					nil,
+					{ message = localize("k_upgrade_ex"), colour = G.C.GREEN }
+				)
+			end
+		end
+	end,
 }

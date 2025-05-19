@@ -9,6 +9,6 @@
     ],
     "Lua.workspace.library": [
         "../Steamodded",
-        "../lovely/dump"
+        "../lovely/dump",
     ]
 }

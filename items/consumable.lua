@@ -27,6 +27,32 @@ SMODS.Consumable {
 }
 
 SMODS.Consumable {
+    key = "edition",
+    set = "basic",
+    atlas = "consumables",
+    pos = {x=1,y=0},
+    keep_on_use = function (self, card)
+        return not card.edition
+    end,
+    can_use = function (self, card)
+        return #G.jokers.highlighted + #G.hand.highlighted == 1
+    end,
+    use = function (self, card, area, copier)
+        if #G.jokers.highlighted + #G.hand.highlighted == 1 then
+            local ccard = G.jokers.highlighted[1] or G.hand.highlighted[1]
+            if card.edition then
+                ccard:set_edition(card.edition)
+                card:set_edition(nil)
+            else
+                card:set_edition(ccard.edition)
+                ccard:set_edition(nil)
+            end
+        end
+    end
+}
+
+
+SMODS.Consumable {
     key = "alzara",
     set = "Tarot",
     atlas = "consumables",

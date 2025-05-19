@@ -26,6 +26,22 @@ return {
                     "do",
                     "nil"
                 }
+            },
+            j_sgbs_conv = {
+                name = "Conversion",
+                text = {
+                    "{C:attention}Joker{} to the {C:attention}right turns", 
+                    "into the {C:attention}Joker{} to the {C:attention}left",
+                    "at the end of shop",
+                    --"{C:inactive,s:0.8}(ignores {C:dark_edition,s:0.8}Editions{C:inactive,s:0.8} and {C:attention,s:0.8}changed values{C:inactive,s:0.8})"
+                }
+            },
+            j_sgbs_snake = {
+                name = "Snake Oil",
+                text = {
+                    "Decreases values of {C:attention}Joker{} to the right",
+                    "by {C:attention}X#1#{} at end of round"
+                }
             }
         },
         Other={
@@ -38,6 +54,12 @@ return {
                 name = "Artist",
                 text = {
                     "tacashumi"
+                }
+            },
+            cred_hasu = {
+                name = "Artist",
+                text = {
+                    "Hasu"
                 }
             },
             exp_when = {text={"When:"}},
@@ -64,6 +86,15 @@ return {
             c_sgbs_blank = {
                 name = "Blank",
                 text = {"Does nothing"}
+            },
+            c_sgbs_edition = {
+                name = "Edition",
+                text = {
+                    "Stores the {C:dark_edition}Edition{} of one selected",
+                    "{C:attention}Playing card or Joker",
+                    "Stored {C:dark_edition}Edition{} may be given to one selected",
+                    "{C:attention}Playing card or Joker"
+                }
             }
         }
     },
