@@ -62,6 +62,24 @@ return {
                     "Hasu"
                 }
             },
+            p_sgbs_plain = {
+                name = "Plain Pack",
+                text = { 
+                "Choose {C:attention}#1#{} of up to",
+                "{C:attention}#2# {C:basic}Basic{} cards",}
+            },
+            p_sgbs_plainJ = {
+                name = "Jumbo Plain Pack",
+                text = { 
+                "Choose {C:attention}#1#{} of up to",
+                "{C:attention}#2# {C:basic}Basic{} cards",}
+            },
+            p_sgbs_plainM = {
+                name = "Mega Plain Pack",
+                text = { 
+                "Choose {C:attention}#1#{} of up to",
+                "{C:attention}#2# {C:basic}Basic{} cards",}
+            },
             exp_when = {text={"When:"}},
             exp_do = {text={"Do:"}},
             cause_test = {text = {"a card is scored"}},
@@ -95,6 +113,30 @@ return {
                     "Stored {C:dark_edition}Edition{} may be given to one selected",
                     "{C:attention}Playing card or Joker"
                 }
+            },
+            c_sgbs_cash = {
+                name = "Cash",
+                text = {"{C:money}+$5"}
+            },
+            c_sgbs_stars = {
+                name = "Stars",
+                text = {
+                    "Create a {C:blue}Planet{} card of",
+                    "your {C:attention}least played hand"
+                }
+            },
+            c_sgbs_mystic = {
+                name = "Mystic",
+                text = {
+                    "Creates a random {C:purple}Tarot{} card"
+                }
+            },
+            c_sgbs_clover = {
+                name = "Clover",
+                text = {
+                    "add {C:blue}+5{} chips to",
+                    "{C:attention}1{} selected card {C:attention}permanently"
+                }
             }
         }
     },
@@ -107,10 +149,14 @@ return {
         dictionary={
             k_basic = "Basic",
             b_basic_cards = "Basic Cards",
+            
+            k_sgbs_plain = "Plain",
+            k_sgbs_plainpack = "Plain Pack",
         },
         high_scores={},
         labels={
-            basic = "Basic"
+            basic = "Basic",
+            k_sgbs_plain = "Plain"
         },
         poker_hand_descriptions={},
         poker_hands={},

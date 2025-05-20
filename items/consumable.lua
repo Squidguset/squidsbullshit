@@ -35,7 +35,7 @@ SMODS.Consumable {
         return not card.edition
     end,
     can_use = function (self, card)
-        return #G.jokers.highlighted + #G.hand.highlighted == 1
+        return #G.jokers.highlighted + #G.hand.highlighted == 1 and ((G.jokers.highlighted[1] or G.hand.highlighted[1]).edition or card.edition)
     end,
     use = function (self, card, area, copier)
         if #G.jokers.highlighted + #G.hand.highlighted == 1 then
@@ -49,6 +49,144 @@ SMODS.Consumable {
             end
         end
     end
+}
+
+SMODS.Consumable {
+    key = "cash",
+    set = "basic",
+    atlas = "consumables",
+    pos = {x=2,y=0},
+    keep_on_use = function (self, card)
+        return false
+    end,
+    can_use = function (self, card)
+        return true
+    end,
+    use = function (self, card, area, copier)
+        ease_dollars(5)
+    end
+}
+
+SMODS.Consumable {
+    key = "stars",
+    set = "basic",
+    atlas = "consumables",
+    pos = {x=3,y=0},
+    can_use = function (self, card)
+        local count = card.area ~= G.consumeables and 1 or 0
+        count = count + #G.consumeables.cards
+        return count <= G.consumeables.config.card_limit
+    end,
+    use = function (self, card, area, copier)
+        local lowest = nil
+        local lowesttypes = {}
+        local has = false
+        local _planet = "c_pluto"
+        for k,v in pairs(G.GAME.hands) do
+            if not lowest then lowest = v.played end
+            if v.visible then
+            if v.played == lowest then table.insert(lowesttypes,k)end
+            if v.played < lowest then lowesttypes = {}; lowest = v.played; has = true end
+            if v.played > lowest then has = true end
+            end
+        end
+        local _hand = pseudorandom_element(lowesttypes,pseudoseed("sgbs_stars"))
+        if not has then _hand = "High Card" end
+        for k, v in pairs(G.P_CENTER_POOLS.Planet) do
+            if v.config.hand_type == _hand then
+                _planet = v.key
+            end
+        end
+        SMODS.add_card{
+            set = "Planet",
+            key = _planet,
+            area = G.consumeables
+        }
+    end
+}
+
+SMODS.Consumable {
+    key = "mystic",
+    set = "basic",
+    atlas = "consumables",
+    pos = {x=4,y=0},
+    can_use = function (self, card)
+        local count = card.area ~= G.consumeables and 1 or 0
+        count = count + #G.consumeables.cards
+        return count <= G.consumeables.config.card_limit
+    end,
+    use = function (self, card, area, copier)
+        SMODS.add_card{
+            set = "Tarot"
+        }
+    end
+}
+
+SMODS.Consumable {
+    key = "clover",
+    set = "basic",
+    atlas = "consumables",
+    pos = {x=5,y=0},
+    can_use = function (self, card)
+        return #G.hand.highlighted == 1
+    end,
+    use = function(self, card, area, copier)
+        G.E_MANAGER:add_event(Event({
+            trigger = 'after',
+            delay = 0.4,
+            func = function()
+                play_sound('tarot1')
+                card:juice_up(0.3, 0.5)
+                return true
+            end
+        }))
+        for i = 1, #G.hand.highlighted do
+            local percent = 1.15 - (i - 0.999) / (#G.hand.highlighted - 0.998) * 0.3
+            G.E_MANAGER:add_event(Event({
+                trigger = 'after',
+                delay = 0.15,
+                func = function()
+                    G.hand.highlighted[i]:flip()
+                    play_sound('card1', percent)
+                    G.hand.highlighted[i]:juice_up(0.3, 0.3)
+                    return true
+                end
+            }))
+        end
+        delay(0.2)
+        for i = 1, #G.hand.highlighted do
+            G.E_MANAGER:add_event(Event({
+                trigger = 'after',
+                delay = 0.1,
+                func = function()
+                    G.hand.highlighted[i].ability.perma_bonus = G.hand.highlighted[i].ability.perma_bonus + 5
+                    return true
+                end
+            }))
+        end
+        for i = 1, #G.hand.highlighted do
+            local percent = 0.85 + (i - 0.999) / (#G.hand.highlighted - 0.998) * 0.3
+            G.E_MANAGER:add_event(Event({
+                trigger = 'after',
+                delay = 0.15,
+                func = function()
+                    G.hand.highlighted[i]:flip()
+                    play_sound('tarot2', percent, 0.6)
+                    G.hand.highlighted[i]:juice_up(0.3, 0.3)
+                    return true
+                end
+            }))
+        end
+        G.E_MANAGER:add_event(Event({
+            trigger = 'after',
+            delay = 0.2,
+            func = function()
+                G.hand:unhighlight_all()
+                return true
+            end
+        }))
+        delay(0.5)
+    end,
 }
 
 

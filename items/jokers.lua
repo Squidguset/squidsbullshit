@@ -84,10 +84,126 @@ end
 ]]
 
 
+function create_experiment_ui(args)
+    args = args or {}
+    local back_func = args.back_func or "exit_overlay_menu"
+
+    local column_a_nodes = {
+        {n = G.UIT.R, config = {align = "tr", padding = 0.02}, nodes = {
+            {n = G.UIT.O, config = {align = "tm",object = DynaText({scale = 0.5, string = "[select A]", maxw = 9, colours = { G.C.WHITE }, float = true, silent = true, shadow = true})}},
+        }},
+        
+            {n = G.UIT.R, config = {align = "cm", padding = 0}, nodes = {
+                not args.no_back and {n=G.UIT.C, config={id = args.back_id or 'overlay_menu_back_button', align = "cm", button_delay = args.back_delay, padding =0.1, minw = 3, r = 0.1, hover = true, colour = args.back_colour or G.C.ORANGE, button = back_func, shadow = true, focus_args = {nav = 'wide', button = 'b', snap_to = args.snap_back}}, nodes={
+                    {n=G.UIT.R, config={align = "cm", padding = 0, no_fill = true}, nodes={
+                        {n=G.UIT.T, config={id = args.back_id or nil, text = args.back_label or localize('b_back'), scale = 0.5, colour = G.C.UI.TEXT_LIGHT, shadow = true, func = not args.no_pip and 'set_button_pip' or nil, focus_args =  not args.no_pip and {button = args.back_button or 'b'} or nil}}
+                    }}
+                }} or nil
+            }},
+        
+    }
+
+    local column_b_nodes = {
+        {n = G.UIT.O, config = {align = "tm",object = DynaText({scale = 0.5, string = "[select B]", maxw = 9, colours = { G.C.WHITE }, float = true, silent = true, shadow = true})}},
+        {n = G.UIT.R, config = {align = "tr", padding = 0.02}, nodes = {
+            --add buttons here
+        }},
+    }
+
+    return {n=G.UIT.ROOT, config = {align = "cm", minw = G.ROOM.T.w*5, minh = G.ROOM.T.h*5,padding = 0.1, r = 0.1, colour = args.bg_colour or {G.C.GREY[1], G.C.GREY[2], G.C.GREY[3],0.7}}, nodes={
+      {n=G.UIT.R, config={align = "cm", minh = 1,r = 0.3, padding = 0.07, minw = 1, colour = args.outline_colour or G.C.JOKER_GREY, emboss = 0.1}, nodes={
+        {n=G.UIT.C, config={align = "cm", minh = 1,r = 0.2, padding = 0.2, minw = 1, colour = args.colour or G.C.L_BLACK}, nodes={
+            {n = G.UIT.R, config = {align = "cm", padding = 0}, nodes = {
+                {n=G.UIT.C, config={align = "cm",padding = args.padding or 0.05, minw = args.minw or 7}, nodes= 
+                    {
+                        {n = G.UIT.R, config = {align = "tm", padding = 0.2}, nodes = {
+                            {n = G.UIT.O, config = {align = "tm",object = DynaText({scale = 0.75, string = "EXPERIMENTAL JOKER FEATURES", maxw = 9, colours = { G.C.WHITE }, float = true, silent = true, shadow = true})}}
+                        }},
+                        {n = G.UIT.R, config = {align = "tm", padding = 0.05}, nodes = {
+                            {n = G.UIT.O, config = {align = "tm",object = DynaText({scale = 0.5, string = "Choose a \"cause\" from column A", maxw = 9, colours = { G.C.WHITE }, float = false, silent = true, shadow = false})}}
+                        }},
+                        {n = G.UIT.R, config = {align = "tm", padding = 0.05}, nodes = {
+                            {n = G.UIT.O, config = {align = "tm",object = DynaText({scale = 0.5, string = "and an \"effect\" from column B", maxw = 9, colours = { G.C.WHITE }, float = false, silent = true, shadow = false})}}
+                        }},
+                        {n=G.UIT.R, config={align = "cm",padding = args.padding or 0.2, minw = args.minw or 7}, nodes= 
+                            {
+                                {n=G.UIT.C, config={align = "tm",padding = args.padding or 0.2, minw = 7, minh = 7, colour = G.C.BLACK, r = 0.3}, nodes= 
+                                    column_a_nodes
+                                },
+                                {n=G.UIT.C, config={align = "cm",padding = args.padding or 0.2, minw = 1, minh = 7, r = 0.3}, nodes= 
+                                    {
+                                        {n = G.UIT.O, config = {align = "tm",object = DynaText({scale = 0.75, string = ">", maxw = 9, colours = { G.C.WHITE }, float = true, silent = true, shadow = true})}}
+                                    }
+                                },
+                                {n=G.UIT.C, config={align = "tm",padding = args.padding or 0.2, minw = 7, minh = 7, colour = G.C.BLACK, r = 0.3}, nodes= 
+                                    column_b_nodes
+                                },
+                            }
+                        },
+                    }
+                },
+            }},
+
+            {n = G.UIT.R, config = {align = "cm", padding = 0}, nodes = {
+                not args.no_back and {n=G.UIT.C, config={id = args.back_id or 'overlay_menu_back_button', align = "cm", minw = 8, button_delay = args.back_delay, padding =0.1, r = 0.1, hover = true, colour = args.back_colour or G.C.ORANGE, button = back_func, shadow = true, focus_args = {nav = 'wide', button = 'b', snap_to = args.snap_back}}, nodes={
+                    {n=G.UIT.R, config={align = "cm", padding = 0, no_fill = true}, nodes={
+                        {n=G.UIT.T, config={id = args.back_id or nil, text = args.back_label or localize('b_back'), scale = 0.5, colour = G.C.UI.TEXT_LIGHT, shadow = true, func = not args.no_pip and 'set_button_pip' or nil, focus_args =  not args.no_pip and {button = args.back_button or 'b'} or nil}}
+                    }}
+                }} or nil
+            }},
+        }},
+      }},
+    }}
+end
+
+function create_experiment_menu()   
+    G.E_MANAGER:add_event(Event({
+        blockable = false,
+        func = function()
+            G.REFRESH_ALERTS = true
+            return true
+        end
+    }))
+  
+    --local t = create_experiment_ui({no_back = true})
+    local t = create_experiment_ui()
+    return t
+end
+
+G.FUNCS.open_experiment_ui = function()
+    G.SETTINGS.paused = true
+    
+    G.FUNCS.overlay_menu{
+        definition = create_experiment_menu(),
+    }
+end
+
 SquidBS.experiments = {}
 SquidBS.experiments.cause = {}
 SquidBS.experiments.effect = {}
-
+--[[
+SMODS.current_mod.reset_game_globals = function (run_start)
+    if not G.GAME.SBSExp then
+    G.GAME.SBSExp = {}
+    G.GAME.SBSExp.opt1 = "cause_test"
+    G.GAME.SBSExp.opt2 = "cause_test"
+    G.GAME.SBSExp.opt3 = "cause_test"
+    G.GAME.SBSExp.opt4 = "effect_test"
+    G.GAME.SBSExp.opt5 = "effect_test"
+    G.GAME.SBSExp.opt6 = "effect_test"
+    G.GAME.SBSExp.sela = 0
+    G.GAME.SBSExp.selb = 0
+    G.GAME.SBSExp.cause_pool = {}
+    for k,v in pairs(SquidBS.experiments.cause) do
+        G.GAME.SBSExp.cause_pool[k] = v
+    end
+    G.GAME.SBSExp.effect_pool = {}
+    for k,v in pairs(SquidBS.experiments.effect) do
+        G.GAME.SBSExp.effect_pool[k] = v
+    end
+    end
+end
+]]
 SquidBS.experiment = Object:extend()
 
 SquidBS.experiment.init = function (self,t)
@@ -173,8 +289,29 @@ SMODS.Joker {
         SquidBS.temp = desc_nodes
 	end,
     add_to_deck = function (self, card, from_debuff)
-        if not from_debuff then
-            
+        if not from_debuff and false and not true then
+            G.GAME.SBSExp.sela = 0
+            G.GAME.SBSExp.selb = 0
+            local a = pseudorandom_element(G.GAME.SBSExp.cause_pool,pseudoseed("experimentjoker")).key
+            G.GAME.SBSExp.opt1 = a
+            --G.GAME.SBSExp.cause_pool[a] = nil
+            a = pseudorandom_element(G.GAME.SBSExp.cause_pool,pseudoseed("experimentjoker")).key
+            G.GAME.SBSExp.opt2 = a
+            --G.GAME.SBSExp.cause_pool[a] = nil
+            a = pseudorandom_element(G.GAME.SBSExp.cause_pool,pseudoseed("experimentjoker")).key
+            G.GAME.SBSExp.opt3 = a
+            --G.GAME.SBSExp.cause_pool[a] = nil
+            a = pseudorandom_element(G.GAME.SBSExp.effect_pool,pseudoseed("experimentjoker")).key
+            G.GAME.SBSExp.opt4 = a
+            --G.GAME.SBSExp.effect_pool_pool[a] = nil
+            a = pseudorandom_element(G.GAME.SBSExp.effect_pool,pseudoseed("experimentjoker")).key
+            G.GAME.SBSExp.opt5 = a
+            --G.GAME.SBSExp.effect_pool_pool[a] = nil
+            a = pseudorandom_element(G.GAME.SBSExp.effect_pool,pseudoseed("experimentjoker")).key
+            G.GAME.SBSExp.opt6 = a
+            --G.GAME.SBSExp.effect_pool_pool[a] = nil
+
+            G.FUNCS.open_experiment_ui()
         end
     end,
     draw = function (self, card, layer)

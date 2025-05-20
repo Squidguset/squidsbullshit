@@ -10,5 +10,7 @@
     "Lua.workspace.library": [
         "../Steamodded",
         "../lovely/dump",
+        "lsp_def",
+        "../Cryptid"
     ]
 }
