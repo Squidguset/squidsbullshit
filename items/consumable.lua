@@ -63,7 +63,7 @@ SMODS.Consumable {
         return true
     end,
     use = function (self, card, area, copier)
-        ease_dollars(5)
+        ease_dollars(10)
     end
 }
 
@@ -73,15 +73,12 @@ SMODS.Consumable {
     atlas = "consumables",
     pos = {x=3,y=0},
     can_use = function (self, card)
-        local count = card.area ~= G.consumeables and 1 or 0
-        count = count + #G.consumeables.cards
-        return count <= G.consumeables.config.card_limit
+        return true
     end,
     use = function (self, card, area, copier)
         local lowest = nil
         local lowesttypes = {}
         local has = false
-        local _planet = "c_pluto"
         for k,v in pairs(G.GAME.hands) do
             if not lowest then lowest = v.played end
             if v.visible then
@@ -92,16 +89,9 @@ SMODS.Consumable {
         end
         local _hand = pseudorandom_element(lowesttypes,pseudoseed("sgbs_stars"))
         if not has then _hand = "High Card" end
-        for k, v in pairs(G.P_CENTER_POOLS.Planet) do
-            if v.config.hand_type == _hand then
-                _planet = v.key
-            end
-        end
-        SMODS.add_card{
-            set = "Planet",
-            key = _planet,
-            area = G.consumeables
-        }
+        update_hand_text({sound = 'button', volume = 0.7, pitch = 0.8, delay = 0.3}, {handname=localize(_hand, 'poker_hands'),chips = G.GAME.hands[_hand].chips, mult = G.GAME.hands[_hand].mult, level=G.GAME.hands[_hand].level})
+        level_up_hand(card,_hand,nil,3)
+        update_hand_text({sound = 'button', volume = 0.7, pitch = 1.1, delay = 0}, {mult = 0, chips = 0, handname = '', level = ''})
     end
 }
 
@@ -187,6 +177,20 @@ SMODS.Consumable {
         }))
         delay(0.5)
     end,
+}
+
+SMODS.Consumable {
+    key = "gem",
+    set = "basic",
+    atlas = "consumables",
+    pos = {x=6,y=0},
+    can_use = function (self, card)
+        return G.GAME.SGBS_gemuse < 25
+    end,
+    use = function (self, card, area, copier)
+        G.GAME.rare_mod = G.GAME.rare_mod + 0.1
+        G.GAME.SGBS_gemuse = G.GAME.SGBS_gemuse + 1
+    end
 }
 
 

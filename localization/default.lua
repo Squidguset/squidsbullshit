@@ -116,13 +116,13 @@ return {
             },
             c_sgbs_cash = {
                 name = "Cash",
-                text = {"{C:money}+$5"}
+                text = {"{C:money}+$10"}
             },
             c_sgbs_stars = {
                 name = "Stars",
                 text = {
-                    "Create a {C:blue}Planet{} card of",
-                    "your {C:attention}least played hand"
+                    "Levels up your",
+                    "{C:attention}least played hand{} {C:blue}thrice",
                 }
             },
             c_sgbs_mystic = {
@@ -136,6 +136,14 @@ return {
                 text = {
                     "add {C:blue}+5{} chips to",
                     "{C:attention}1{} selected card {C:attention}permanently"
+                }
+            },
+            c_sgbs_gem = {
+                name = "Gem",
+                text = {
+                    "Makes {C:red}Rare{} Jokers",
+                    "{C:attention}more common{}",
+                    "{C:inactive}(maximum of 25 uses)"
                 }
             }
         }

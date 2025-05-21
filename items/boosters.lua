@@ -14,7 +14,7 @@ SMODS.Booster {
     weight = 3,
     group_key = "k_sgbs_plainpack",
     select_card = "consumeables",
-    
+    cost = 3,
     loc_vars = function (self, info_queue, card)
         return {vars = {card.ability.choose,card.ability.extra}}
     end,
@@ -35,7 +35,7 @@ SMODS.Booster {
     weight = 2,
     group_key = "k_sgbs_plainpack",
     select_card = "consumeables",
-    
+    cost = 4,
     loc_vars = function (self, info_queue, card)
         return {vars = {card.ability.choose,card.ability.extra}}
     end,
@@ -56,7 +56,7 @@ SMODS.Booster {
     weight = 2,
     group_key = "k_sgbs_plainpack",
     select_card = "consumeables",
-    
+    cost = 5,
     loc_vars = function (self, info_queue, card)
         return {vars = {card.ability.choose,card.ability.extra}}
     end,

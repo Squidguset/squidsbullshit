@@ -27,3 +27,9 @@ SMODS.Sound {
         return G.booster_pack and not G.booster_pack.REMOVED and SMODS.OPENED_BOOSTER and SMODS.OPENED_BOOSTER.config.center.kind == 'Plain' and 100 or nil
     end
 }
+
+SMODS.current_mod.reset_game_globals = function (run_start)
+    if run_start then
+        G.GAME.SGBS_gemuse = 0
+    end
+end
