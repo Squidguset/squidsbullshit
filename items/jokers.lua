@@ -8,6 +8,9 @@ SMODS.Atlas {
 SMODS.Joker {
     key = "dryfire",
     atlas = "jokers",
+    dependencies = {
+        "Cryptid"
+    },
     sgbs_oaat = true,
     pos = {x=1,y=0},
     loc_vars = function (self, info_queue, card)
@@ -204,6 +207,8 @@ SMODS.current_mod.reset_game_globals = function (run_start)
     end
 end
 ]]
+
+--[[  Experiment
 SquidBS.experiment = Object:extend()
 
 SquidBS.experiment.init = function (self,t)
@@ -324,10 +329,13 @@ SMODS.Joker {
     end
 }
 
+]]
+
 SMODS.Joker{
     key = "conv",
     atlas = "jokers",
     rarity = 3,
+    cost = 12,
     loc_vars = function (self, info_queue, card)
         
         info_queue[#info_queue+1] = {key = "cred_hasu",set = "Other"}
@@ -383,63 +391,85 @@ SMODS.Joker{
 SMODS.Joker {
     key = "snake",
     atlas = "jokers",
-    config = {extra = {mod = 0.5}},
-    dependencies = {
-        "Cryptid"
-    },
-    loc_vars = function (self, info_queue, card)
-        return {vars = {card.ability.extra.mod}}
-    end,
+    cost = 4,
     calculate = function(self, card, context)
 		if
 			(context.end_of_round and not context.repetition and not context.individual and not context.blueprint)
 			or context.forcetrigger
 		then
-			local check = false
+            local apply = false
 			for i = 1, #G.jokers.cards do
 				if G.jokers.cards[i] == card then
-                    if Cryptid then
-					if i < #G.jokers.cards then
-						    if not Card.no(G.jokers.cards[i + 1], "immutable", true) then
-						    	check = true
-						    	Cryptid.with_deck_effects(G.jokers.cards[i + 1], function(cards)
-						    		Cryptid.misprintize(
-						    			cards,
-						    			{ min = card.ability.extra.mod, max = card.ability.extra.mod },
-						    			nil,
-						    			true
-						    		)
-						    	end)
-						    end
-                        else
-                            if not G.jokers.cards[i + 1].config.center.immutable then
-                                check = true
-                                local ccard = G.jokers.cards[i + 1]
-                                for k,v in  pairs(ccard.ability) do
-                                    if type(v) == "number" then
-                                        ccard.ability[k] = ccard.ability[k] * card.ability.extra.mod
-                                    end
-                                end
-                                for k,v in  pairs(extra) do
-                                    if type(v) == "number" then
-                                        ccard.ability[k] = ccard.ability[k] * card.ability.extra.mod
-                                    end
+                     if G.jokers.cards[i+1] then
+                        local modcard = G.jokers.cards[i+1]
+                        
+                            if modcard.ability.extra then
+                                if type(modcard.ability.extra) == "number" then modcard.ability.extra = modcard.ability.extra *0.5; apply = true
+                                elseif type(modcard.ability.extra) == "table" then for k,v in pairs(modcard.ability.extra) do
+                                    if type(v) == "number" then modcard.ability.extra[k] = modcard.ability.extra[k] * 0.5 ; apply = true end
                                 end
                             end
                         end
 					end
 				end
 			end
-			if check then
-				card_eval_status_text(
-					card,
-					"extra",
-					nil,
-					nil,
-					nil,
-					{ message = localize("k_upgrade_ex"), colour = G.C.GREEN }
-				)
-			end
+            if apply then return {
+                message = "Downgrade!"
+            }
+        end
 		end
-	end,
+    end
+}
+
+SMODS.Joker {
+    key = "imaginer",
+    atlas = "jokers",
+    pos = {x=0,y=1},
+    loc_vars = function (self, info_queue, card)
+        info_queue[#info_queue+1] = G.P_CENTERS.c_sgbs_blank
+    end,
+    rarity = 2,
+    cost = 5,
+    calculate = function (self, card, context)
+        if context.using_consumeable and context.cardarea == G.jokers and context.consumeable.config.center_key == "c_sgbs_blank" then
+                context.consumeable:start_dissolve()
+                if pseudorandom("imaginer") <= 0.1 and #G.consumeables.cards + (context.consumeable.edition and context.consumeable.edition.negative and 1 or 0) <= G.consumeables.config.card_limit then
+                    SMODS.add_card{
+                        set = "Spectral"
+                    }
+                end
+        end
+        if context.forcetrigger then
+            SMODS.add_card{
+                        set = "Spectral"
+                    }
+        end
+    end
+}
+
+-- credit zacblazer for idea :)
+
+SMODS.Joker {
+    key = "money",
+    atlas = "jokers",
+    pos = {x=1,y=1},
+    pixel_size = {w=63,h=95},
+    config = {extra = {give = 3}},
+    cost = 4,
+    loc_vars = function (self, info_queue, card)
+        info_queue[#info_queue+1] = G.P_CENTERS.c_sgbs_blank
+        return {vars = {card.ability.extra.give}}
+    end,
+    calculate = function (self, card, context)
+        if context.using_consumeable and context.cardarea == G.jokers and context.consumeable.config.center_key == "c_sgbs_blank" then
+            local thunk = false
+            if pseudorandom("sgbs moneeeeee") <= .5 then context.consumeable:start_dissolve(); thunk = true end
+            ease_dollars(card.ability.extra.give)
+            
+                return {
+                    message = "+$".. card.ability.extra.give,
+                    colour = G.C.YELLOW
+                }            
+        end
+    end
 }

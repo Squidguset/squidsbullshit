@@ -39,8 +39,24 @@ return {
             j_sgbs_snake = {
                 name = "Snake Oil",
                 text = {
-                    "Decreases values of {C:attention}Joker{} to the right",
-                    "by {C:attention}X#1#{} at end of round"
+                    "Halves values of {C:attention}Joker{} to the right",
+                    "at end of round"
+                }
+            },
+            j_sgbs_imaginer = {
+                name = "Imaginer",
+                text = {
+                    "{C:green}10%{} chance to create a random",
+                    "{C:spectral}Spectral{} card when a {C:basic}Blank{} is used",
+                    "{C:red}destroys used {C:basic}Blank{} cards",
+                    "{C:inactive}(Must have space)"
+                }
+            },
+            j_sgbs_money = {
+                name = "Blank Buyer",
+                text = {
+                    "Using a {C:basic}Blank{} card",
+                    "gives {C:money}$#1#{} with a {C:green}50%{} chance to {C:red}destroy it{}"
                 }
             }
         },
