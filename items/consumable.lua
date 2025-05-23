@@ -42,7 +42,6 @@ SMODS.Consumable {
             local ccard = G.jokers.highlighted[1] or G.hand.highlighted[1]
             if card.edition then
                 ccard:set_edition(card.edition)
-                card:set_edition(nil)
             else
                 card:set_edition(ccard.edition)
                 ccard:set_edition(nil)
